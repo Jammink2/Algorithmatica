@@ -1,6 +1,6 @@
 Algorithmatica
 ==============
 
-My adapations of ruby algorithms from nature.  
+My adaptations of ruby algorithms from nature.  
 
 
