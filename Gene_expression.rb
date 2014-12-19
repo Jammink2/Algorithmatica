@@ -32,21 +32,44 @@ def point_mutation(grammar, genome, head_length, rate=1.0/genome.size.to_f)
     return child
 end
 
-def crossover()
+def crossover(parent1, parent2, rate)
+    return ""+parent1 if rand()>rate
+    child= ""
+    parent1.size.times do |i|
+        child << ((rand() < 0.5) ? parent1[i] : parent2[i])
+    end
+    return child
 end
 
 def reproduce(grammar, selected, pop_size, p_crossover, head_length)
-    return 0
+    children = []
+    selected.each_with_index do |p1, i|
+        p2 = (i.modulo(2)==0) ? selected[i+1] : selected[i-1]
+        p2 = selected[0] if i == selected.size-1
+        child = {}
+        child[:genome] = crossover(p1[:genome], p2[:genome], p_crossover)
+        child[:genome] = point_mutation(grammar, child[:genome], head_length)
+        children << child 
+    end
+    return children 
 end
 
 def random_genome(grammar, head_length, tail_length)
-  return 0 
+  s = ""
+  head_length.times do
+    selection = () ? grammar["FUNC"]: grammar["TERM"]
+    s << selection[rand(selection.size)]
+  end 
+  tail_length.times {s << grammar["TERM"][rand(grammar["TERM"].size)]}
+  return s
 end
 
-def target_function()
+def target_function(x)
+    return 0
 end
 
-def sample_from_bounds()
+def sample_from_bounds(bounds)
+    return 0
 end
 
 def cost(program, bounds, num_trials=30)
