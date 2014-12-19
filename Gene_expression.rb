@@ -126,7 +126,7 @@ def search(grammar, bounds, h_length, t_length, max_gens, pop_size, p_cross)
     end
     pop.each{|c| evaluate(c, grammar, bounds)}
     best = pop.sort{|x, y| x[:fitness] <=> y[:fitness]}.first
-    max_gens.times do |gen|
+    max_gens.times do |gen| #check this
         selected = Array.new(pop){|i| binary_tournament(pop)}
         children = reproduce(grammar, selected, pop_size, p_cross, h_length)
         children.each{|c| evaluate(c, grammar, bounds)}
