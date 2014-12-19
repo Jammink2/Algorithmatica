@@ -1,7 +1,11 @@
 """
+Usage: $ ruby Gene_expression.rb
+
+You can adjust parameters in the #algorithm configuration section
+
 Gene Expression Programming in Ruby
 Adapted from Ferreira and Brownlee, Clever Algorithms
-This is a work in progress
+This is a work in progress.
 
 In K- Expression, each symbol maps to a function or terminal node.  The linear representation is mapped to an expression tree in a breadth-first manner. 
 
@@ -65,15 +69,23 @@ def random_genome(grammar, head_length, tail_length)
 end
 
 def target_function(x)
-    return 0
+    return x**4.0 + x**3 + x**2 + x
 end
 
 def sample_from_bounds(bounds)
-    return 0
+    return bounds[0] + ((bounds[1] - bounds[0]) * rand())
 end
 
 def cost(program, bounds, num_trials=30)
-    return 0
+    errors = 0.0
+    num_trials.times do
+        x = sample_from_bounds(bounds)
+        expression, score = program.gsub("x", x.to_s), 0.0
+        begin score = eval(expression) rescue score = 0.0/0.0 end
+        return 9999999 if score.nan? or score.infinite?
+        errors += (score - target_function(x)).abs
+    end
+    return errors / num_trials.to_f        
 end
 
 def mapping(genome, grammar)
@@ -121,7 +133,7 @@ def search(grammar, bounds, h_length, t_length, max_gens, pop_size, p_cross)
         children.sort!{|x, y| x[:fitness] <=> y[:fitness]}
         best = children.first if children.first[:fitness] <= best[:fitness]
         pop = (children+pop).first(pop_size)
-        puts " > gen=#{gen}, f=#{best[:fitness]}, g={best[:genome]}"
+        puts " > gen=#{gen}, f=#{best[:fitness]}, g=#{best[:genome]}"
     end
     return best
 end
@@ -136,7 +148,7 @@ if __FILE__ == $0
     h_length = 20
     t_length = h_length * (2-1) + 1
     max_gens = 150
-    pop_size = 80
+    pop_size = 800
     p_cross = 0.85
     
     #execute the algorithm
