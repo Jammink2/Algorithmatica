@@ -25,9 +25,23 @@ end
 
 def create_neigh_bee(site, patch_size, search_space)
     vector = []
+    site.each_with_index do |v, i|
+        v = (rand()<0.5) ? v+rand()*patch_size : v-rand()*patch_size
+        v = search_space[i][0] if v < search_space[i][0]
+        v = search_space[i][1] if v > search_space[i][1]
+        vector << v
+    end
+    bee = {}
+    bee[:vector] = vector
+    return bee
 end
 
 def search_neigh(parent, neigh_size, patch_size, search_space)
+    neigh = []
+    neigh_size.times do
+        neigh << create_neigh_bee(parent[:vector], patch_size, search_space)
+    end
+    neigh.each{|bee| bee[:fitness] = objective_function(bee[:vector])}
 end
 
 def create_scout_bees(search_space, num_scouts)
@@ -62,10 +76,10 @@ if __FILE__ == $0
     problem_size = 3
     search_space = Array.new(problem_size) {|i| [-5, 5]}
     #algorithm configuration
-    max_gens = 500
-    num_bees = 45
-    num_sites = 3
-    elite_sites = 1
+    max_gens = 5000
+    num_bees = 4500
+    num_sites = 33
+    elite_sites = 5
     patch_size = 3.0
     e_bees = 7
     o_bees = 2
