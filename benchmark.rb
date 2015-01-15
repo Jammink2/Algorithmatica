@@ -1,0 +1,20 @@
+#a benchmark between symbols and strings
+require 'benchmark'
+
+iterator = 100_000_000
+
+str = Benchmark.measure do
+    iterator.times do
+        "test"
+    end
+end.total
+
+sym = Benchmark.measure do
+    iterator.times do
+        :test
+    end
+end.total
+
+puts "String: " + str.to_s
+puts "Symbol: " + sym.to_s
+puts
